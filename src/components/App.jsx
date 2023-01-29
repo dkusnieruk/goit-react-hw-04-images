@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Modal from './Modal/Modal';
@@ -37,24 +37,46 @@ function App () {
     setIsLoading(false)
   };
 
-  const getPhotos = async () => {
-    setIsLoading(true)
-  
-    if (filter === 0 || filter === '') {
-      setPictures([])
-      setIsLoading(false)
-    } else
-      try {
-        const response = await fetchImages(page, filter);
-
-        setPictures(response.data.hits)
-        setTotalHits(response.data.totalHits)
-      } catch (error) {
-        setError({error})
-      } finally {
+  useEffect(()=>{
+    const getPhotos = async () => {
+      setIsLoading(true)
+    
+      if (filter === 0 || filter === '') {
+        setPictures([])
         setIsLoading(false)
-      }
-  };
+      } else
+        try {
+          const response = await fetchImages(page, filter);
+  
+          setPictures(response.data.hits)
+          setTotalHits(response.data.totalHits)
+        } catch (error) {
+          setError({error})
+        } finally {
+          setIsLoading(false)
+        }
+    }
+    getPhotos();
+  },[])
+
+  // const getPhotos = async () => {
+  //   setIsLoading(true)
+  
+  //   if (filter === 0 || filter === '') {
+  //     setPictures([])
+  //     setIsLoading(false)
+  //   } else
+  //     try {
+  //       const response = await fetchImages(page, filter);
+
+  //       setPictures(response.data.hits)
+  //       setTotalHits(response.data.totalHits)
+  //     } catch (error) {
+  //       setError({error})
+  //     } finally {
+  //       setIsLoading(false)
+  //     }
+  // };
 
   const onClickModal = (largeFormatURL, tags) => {
       setShowModal(true)
