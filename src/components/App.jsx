@@ -5,88 +5,81 @@ import Modal from './Modal/Modal';
 import fetchImages from '../fetchImages/fetchImages';
 import Loader from './Loader/Loader';
 
-function App () {
-  
- const [pictures, setPictures] =useState([]);
- const [error, setError] = useState(null);
- const [isLoading, setIsLoading] = useState(false);
- const [response, setResponse] = useState()
- const [showModal, setShowModal] = useState(false);
- const [filter, setFilter] = useState('')
- const [imageSrc, setImageSrc] = useState('')
- const [imageAlt, setImageAlt] = useState('')
- let   [page, setPage] = useState(1)
- const [totalHits, setTotalHits]=useState()
-
+function App() {
+  const [pictures, setPictures] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [filter, setFilter] = useState('');
+  const [imageSrc, setImageSrc] = useState('');
+  const [imageAlt, setImageAlt] = useState('');
+  let [page, setPage] = useState(1);
+  const [totalHits, setTotalHits] = useState();
 
   const onChange = event => {
     const { value } = event.target;
-    
-    setFilter(value)
-    setPage(1)
-    };
+
+    setFilter(value);
+    setPage(1);
+  };
 
   const onSubmit = async event => {
-    setIsLoading(true)
-    
+    setIsLoading(true);
+
     event.preventDefault();
     const response = await fetchImages(page, filter);
 
-    setPictures(response.data.hits)
-    setTotalHits(response.data.totalHits)
-    setIsLoading(false)
+    setPictures(response.data.hits);
+    setTotalHits(response.data.totalHits);
+    setIsLoading(false);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const getPhotos = async () => {
-      setIsLoading(true)
-    
+      setIsLoading(true);
+
       if (filter === 0 || filter === '') {
-        setPictures([])
-        setIsLoading(false)
+        setPictures([]);
+        setIsLoading(false);
       } else
         try {
           const response = await fetchImages(page, filter);
-          setPictures(response.data.hits)
-          setTotalHits(response.data.totalHits)
+          setPictures(response.data.hits);
+          setTotalHits(response.data.totalHits);
         } catch (error) {
-          setError({error})
+          setError({ error });
         } finally {
-          setIsLoading(false)
+          setIsLoading(false);
         }
-    }
+    };
     getPhotos();
-  },[response])
-
+  }, [response]);
 
   const onClickModal = (largeFormatURL, tags) => {
-      setShowModal(true)
-      setImageSrc(largeFormatURL)
-      setImageAlt(tags)
+    setShowModal(true);
+    setImageSrc(largeFormatURL);
+    setImageAlt(tags);
   };
 
   const onClose = () => {
     document.addEventListener(`keydown`, event => {
       if (event.key === 'Escape') {
-        setShowModal(false)
+        setShowModal(false);
       }
     });
-    setShowModal(false)
-
+    setShowModal(false);
   };
 
   const updateCount = async () => {
-      setIsLoading(true)
-      setPage(
-        page= page+1)
-    
-    
+    setIsLoading(true);
+    setPage((page = page + 1));
+
     const newImages = await fetchImages(page, filter);
 
-    setPictures([...pictures, ...newImages.data.hits])
-    setTotalHits(totalHits)
-    setIsLoading(false)
-
+    setPictures([...pictures, ...newImages.data.hits]);
+    setTotalHits(totalHits);
+    setIsLoading(false);
   };
 
   // async didComponentUpdate(prevState) {
@@ -97,35 +90,31 @@ function App () {
   //   }
   // }
 
-    return (
-      <>
-        <div>
-          <SearchBar onChange={onChange} onSubmit={onSubmit} />
-          {error && <p>Whoops, something went wrong: {error.message}</p>}
-          {isLoading && <Loader />}
-          {pictures.length > 0 && (
-            <>
-              <ImageGallery
-                page={page}
-                pictures={pictures}
-                response={response}
-                onClickModal={onClickModal}
-                updateCount={updateCount}
-                totalHits={totalHits}
-              />
-            </>
-          )}
-          {showModal && (
-            <Modal
-              imageSrc={imageSrc}
-              imageAlt={imageAlt}
-              onClose={onClose}
+  return (
+    <>
+      <div>
+        <SearchBar onChange={onChange} onSubmit={onSubmit} />
+        {error && <p>Whoops, something went wrong: {error.message}</p>}
+        {isLoading && <Loader />}
+        {pictures.length > 0 && (
+          <>
+            <ImageGallery
+              page={page}
+              pictures={pictures}
+              response={response}
+              onClickModal={onClickModal}
+              updateCount={updateCount}
+              totalHits={totalHits}
             />
-          )}
-        </div>
-      </>
-    );
-  }
+          </>
+        )}
+        {showModal && (
+          <Modal imageSrc={imageSrc} imageAlt={imageAlt} onClose={onClose} />
+        )}
+      </div>
+    </>
+  );
+}
 // }
 
 export default App;
