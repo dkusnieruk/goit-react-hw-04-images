@@ -1,14 +1,12 @@
-import { Component } from 'react';
-
 import propTypes from 'prop-types';
 
 import css from '../Button/button.module.css';
 
-class ButtonLoadMorePics extends Component {
-  render() {
+function ButtonLoadMorePics (props) {
+  
     return (
       <button
-        onClick={this.props.updateCount}
+        onClick={props.updateCount}
         id="LoadMore"
         className={css.button}
       >
@@ -16,7 +14,7 @@ class ButtonLoadMorePics extends Component {
       </button>
     );
   }
-}
+
 
 ButtonLoadMorePics.propTypes = {
   updateCount: propTypes.func,

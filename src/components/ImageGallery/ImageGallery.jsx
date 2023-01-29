@@ -1,18 +1,17 @@
-import { Component } from 'react';
 import propTypes from 'prop-types';
 import css from '../ImageGallery/imageGallery.module.css';
 import ButtonLoadMorePics from 'components/Button/ButtonLoadMore';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 
-class ImageGallery extends Component {
-  render() {
+function ImageGallery (props) {
+  console.log(props);
     return (
       <>
         <ul className={css.gallery}>
-          {this.props.pictures.map((picture, index) => {
+          {props.pictures.map((picture, index) => {
             return (
               <ImageGalleryItem
-                onClickModal={this.props.onClickModal}
+                onClickModal={props.onClickModal}
                 picture={picture}
                 index={index}
                 webformatURL={picture.webformatURL}
@@ -23,14 +22,14 @@ class ImageGallery extends Component {
           })}
         </ul>
         <div className={css.buttonPlace}>
-          {this.props.totalHits - this.props.pictures.length > 0 && (
-            <ButtonLoadMorePics updateCount={this.props.updateCount} />
+          {props.totalHits - props.pictures.length > 0 && (
+            <ButtonLoadMorePics updateCount={props.updateCount} />
           )}
         </div>
       </>
     );
   }
-}
+// }
 
 ImageGallery.propTypes = {
   totalHits: propTypes.number,

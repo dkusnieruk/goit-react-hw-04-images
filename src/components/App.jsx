@@ -1,126 +1,103 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Modal from './Modal/Modal';
 import fetchImages from '../fetchImages/fetchImages';
 import Loader from './Loader/Loader';
 
-class App extends Component {
-  state = {
-    pictures: [],
-    isLoading: false,
-    error: null,
-    filter: '',
-    showModal: false,
-    page: 1,
-  };
+function App () {
+  
+ const [pictures, setPictures] =useState([]);
+ const [error, setError] = useState(null);
+ const [isLoading, setIsLoading] = useState(false);
+ const [response, setResponse] = useState()
+ const [showModal, setShowModal] = useState(false);
+ const [filter, setFilter] = useState('')
+ const [imageSrc, setImageSrc] = useState('')
+ const [imageAlt, setImageAlt] = useState('')
+ let   [page, setPage] = useState(1)
+ const [totalHits, setTotalHits]=useState()
 
-  onChange = event => {
+
+  const onChange = event => {
     const { value } = event.target;
-    this.setState({
-      filter: value,
-      page: 1,
-    });
-  };
+    
+    setFilter(value)
+    setPage(1)
+    };
 
-  onSubmit = async event => {
-    this.setState({
-      isLoading: true,
-    });
+  const onSubmit = async event => {
+    setIsLoading(true)
+    
     event.preventDefault();
-    const response = await fetchImages(this.state.page, this.state.filter);
+    const response = await fetchImages(page, filter);
 
-    this.setState({
-      pictures: response.data.hits,
-      totalHits: response.data.totalHits,
-      isLoading: false,
-    });
+    setPictures(response.data.hits)
+    setTotalHits(response.data.totalHits)
+    setIsLoading(false)
   };
 
-  getPhotos = async () => {
-    this.setState({ isLoading: true });
-    if (this.state.filter === 0 || this.state.filter === '') {
-      this.setState({
-        pictures: [],
-        isLoading: false,
-      });
+  const getPhotos = async () => {
+    setIsLoading(true)
+  
+    if (filter === 0 || filter === '') {
+      setPictures([])
+      setIsLoading(false)
     } else
       try {
-        const response = await fetchImages(this.state.page, this.state.filter);
+        const response = await fetchImages(page, filter);
 
-        this.setState({
-          pictures: response.data.hits,
-          totalHits: response.data.totalHits,
-        });
+        setPictures(response.data.hits)
+        setTotalHits(response.data.totalHits)
       } catch (error) {
-        this.setState({ error });
+        setError({error})
       } finally {
-        this.setState({
-          isLoading: false,
-        });
+        setIsLoading(false)
       }
   };
 
-  onClickModal = (largeFormatURL, tags) => {
-    this.setState({
-      showModal: true,
-      imageSrc: largeFormatURL,
-      imageAlt: tags,
-    });
+  const onClickModal = (largeFormatURL, tags) => {
+      setShowModal(true)
+      setImageSrc(largeFormatURL)
+      setImageAlt(tags)
   };
 
-  onClose = () => {
+  const onClose = () => {
     document.addEventListener(`keydown`, event => {
       if (event.key === 'Escape') {
-        this.setState({
-          showModal: false,
-        });
+        setShowModal(false)
       }
     });
-    this.setState({
-      showModal: false,
-    });
+    setShowModal(false)
+
   };
 
-  updateCount = async () => {
-    this.setState(prevState => ({
-      isLoading: true,
-      page: prevState.page + 1,
-    }));
-    const newImages = await fetchImages(this.state.page + 1, this.state.filter);
+  const updateCount = async () => {
+      setIsLoading(true)
+      setPage(prevState =>{
+        page= prevState.page+1
+      })
+    
+    const newImages = await fetchImages(page + 1, filter);
 
-    this.setState({
-      pictures: [...this.state.pictures, ...newImages.data.hits],
-      totalHits: this.state.totalHits,
-      isLoading: false,
-    });
+    setPictures([...pictures, ...newImages.data.hits])
+    setTotalHits(totalHits)
+    setIsLoading(false)
+
   };
 
-  async didComponentUpdate(prevState) {
-    if (this.state.page !== prevState.page) {
-      await this.getPhotos();
-    } else {
-      return false;
-    }
-  }
-
-  render() {
-    const {
-      pictures,
-      error,
-      isLoading,
-      response,
-      showModal,
-      imageSrc,
-      imageAlt,
-      page,
-      totalHits,
-    } = this.state;
+  // async didComponentUpdate(prevState) {
+  //   if (this.state.page !== prevState.page) {
+  //     await this.getPhotos();
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
     return (
       <>
         <div>
-          <SearchBar onChange={this.onChange} onSubmit={this.onSubmit} />
+          <SearchBar onChange={onChange} onSubmit={onSubmit} />
           {error && <p>Whoops, something went wrong: {error.message}</p>}
           {isLoading && <Loader />}
           {pictures.length > 0 && (
@@ -129,8 +106,8 @@ class App extends Component {
                 page={page}
                 pictures={pictures}
                 response={response}
-                onClickModal={this.onClickModal}
-                updateCount={this.updateCount}
+                onClickModal={onClickModal}
+                updateCount={updateCount}
                 totalHits={totalHits}
               />
             </>
@@ -139,13 +116,13 @@ class App extends Component {
             <Modal
               imageSrc={imageSrc}
               imageAlt={imageAlt}
-              onClose={this.onClose}
+              onClose={onClose}
             />
           )}
         </div>
       </>
     );
   }
-}
+// }
 
 export default App;

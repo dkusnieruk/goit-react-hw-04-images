@@ -1,29 +1,28 @@
-import { Component } from 'react';
 import propTypes from 'prop-types';
 import css from '../ImageGalleryItem/imageGalleryItem.module.css';
 
-class ImageGalleryItem extends Component {
-  render() {
+function ImageGalleryItem (props) {
+
     return (
-      <li key={this.props.picture.id} id={this.props.picture.id}>
+      <li key={props.picture.id} id={props.picture.id}>
         <div
           className={css.link}
-          href={this.props.largeFormatURL}
+          href={props.largeFormatURL}
           onClick={() =>
-            this.props.onClickModal(this.props.largeFormatURL, this.props.tags)
+            props.onClickModal(props.largeFormatURL, props.tags)
           }
-          title={this.props.tags}
+          title={props.tags}
         >
           <img
-            src={this.props.webformatURL}
-            alt={this.props.tags}
+            src={props.webformatURL}
+            alt={props.tags}
             className={css.image}
           />
         </div>
       </li>
     );
   }
-}
+
 
 ImageGalleryItem.propTypes = {
   largeFormatURL: propTypes.string,

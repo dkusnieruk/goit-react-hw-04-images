@@ -1,12 +1,11 @@
-import { Component } from 'react';
 import css from '../SearchBar/searchBar.module.css';
 import propTypes from 'prop-types';
 
-class SearchBar extends Component {
-  render() {
+function SearchBar (props) {
+  
     return (
       <header className="searchbar">
-        <form className={css.form} onSubmit={this.props.onSubmit}>
+        <form className={css.form} onSubmit={props.onSubmit}>
           <input
             className={css.input}
             type="text"
@@ -14,15 +13,15 @@ class SearchBar extends Component {
             name="filter"
             autoFocus
             placeholder="Search images and photos"
-            value={this.props.filter}
-            onChange={this.props.onChange}
+            value={props.filter}
+            onChange={props.onChange}
           />
           <button className={css.button} type="submit"></button>
         </form>
       </header>
     );
   }
-}
+
 SearchBar.propTypes = {
   onSubmit: propTypes.func,
   filter: propTypes.string,
