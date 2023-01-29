@@ -56,9 +56,9 @@ function App () {
         }
     }
     getPhotos();
-  },[])
+  },[response])
 
-  
+
   const onClickModal = (largeFormatURL, tags) => {
       setShowModal(true)
       setImageSrc(largeFormatURL)
@@ -77,11 +77,11 @@ function App () {
 
   const updateCount = async () => {
       setIsLoading(true)
-      setPage(prevState =>{
-        page= prevState.page+1
-      })
+      setPage(
+        page= page+1)
     
-    const newImages = await fetchImages(page + 1, filter);
+    
+    const newImages = await fetchImages(page, filter);
 
     setPictures([...pictures, ...newImages.data.hits])
     setTotalHits(totalHits)
