@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@a81bbbf8298c0fa03ea29cdc473d45769f953675
 
       - name: Install, lint, build 🔧
         run: |
