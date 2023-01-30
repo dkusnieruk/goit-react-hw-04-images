@@ -29,7 +29,7 @@ function App() {
 
     event.preventDefault();
     const response = await fetchImages(page, filter);
-
+    setResponse(response)
     setPictures(response.data.hits);
     setTotalHits(response.data.totalHits);
     setIsLoading(false);
@@ -54,7 +54,7 @@ function App() {
         }
     };
     getPhotos();
-  }, [response]);
+  },[]);
 
   const onClickModal = (largeFormatURL, tags) => {
     setShowModal(true);
@@ -76,7 +76,6 @@ function App() {
     setPage((page = page + 1));
 
     const newImages = await fetchImages(page, filter);
-
     setPictures([...pictures, ...newImages.data.hits]);
     setTotalHits(totalHits);
     setIsLoading(false);
