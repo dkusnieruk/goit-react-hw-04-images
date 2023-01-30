@@ -54,7 +54,8 @@ function App() {
         }
     };
     getPhotos();
-  }, [response.data.hits]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response]);
 
   const onClickModal = (largeFormatURL, tags) => {
     setShowModal(true);
