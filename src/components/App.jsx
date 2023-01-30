@@ -54,7 +54,7 @@ function App() {
         }
     };
     getPhotos();
-  },[]);
+  },[response, page, filter]);
 
   const onClickModal = (largeFormatURL, tags) => {
     setShowModal(true);
