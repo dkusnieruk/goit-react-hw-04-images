@@ -1,5 +1,7 @@
 name: Build and deploy to GitHub Pages
 
+
+
 on:
   push:
     branches: [main]
@@ -22,3 +24,8 @@ jobs:
         with:
           branch: gh-pages
           folder: build
+-       
+      name: Fix permission
+      run: |
+      chmod a+x bin/*
+      git commit -am "add permission"
