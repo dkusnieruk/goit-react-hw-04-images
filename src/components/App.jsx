@@ -5,16 +5,17 @@ import Modal from './Modal/Modal';
 import fetchImages from '../fetchImages/fetchImages';
 import Loader from './Loader/Loader';
 
-function App() {
+const App = () => {
   const [pictures, setPictures] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [response, setResponse] = useState();
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState({
+    show: false,
+    imageSrc: '',
+    imageAlt: '',
+  });
   const [filter, setFilter] = useState('');
-  const [imageSrc, setImageSrc] = useState('');
-  const [imageAlt, setImageAlt] = useState('');
-  let [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalHits, setTotalHits] = useState();
 
   const onChange = event => {
@@ -28,8 +29,8 @@ function App() {
     setIsLoading(true);
 
     event.preventDefault();
+    setPage(1);
     const response = await fetchImages(page, filter);
-    setResponse(response);
     setPictures(response.data.hits);
     setTotalHits(response.data.totalHits);
     setIsLoading(false);
@@ -38,7 +39,7 @@ function App() {
   useEffect(() => {
     const getPhotos = async () => {
       setIsLoading(true);
-
+      setPage(1);
       if (filter === 0 || filter === '') {
         setPictures([]);
         setIsLoading(false);
@@ -55,40 +56,30 @@ function App() {
     };
     getPhotos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [response]);
+  }, []);
 
   const onClickModal = (largeFormatURL, tags) => {
-    setShowModal(true);
-    setImageSrc(largeFormatURL);
-    setImageAlt(tags);
+    setShowModal({ show: true, imageSrc: largeFormatURL, imageAlt: tags });
   };
 
   const onClose = () => {
     document.addEventListener(`keydown`, event => {
       if (event.key === 'Escape') {
-        setShowModal(false);
+        setShowModal({ show: false, imageSrc: '', imageAlt: '' });
       }
     });
-    setShowModal(false);
+    setShowModal({ show: false, imageSrc: '', imageAlt: '' });
   };
 
   const updateCount = async () => {
     setIsLoading(true);
-    setPage((page = page + 1));
+    setPage(page + 1);
 
-    const newImages = await fetchImages(page, filter);
+    const newImages = await fetchImages(page + 1, filter);
     setPictures([...pictures, ...newImages.data.hits]);
     setTotalHits(totalHits);
     setIsLoading(false);
   };
-
-  // async didComponentUpdate(prevState) {
-  //   if (this.state.page !== prevState.page) {
-  //     await this.getPhotos();
-  //   } else {
-  //     return false;
-  //   }
-  // }
 
   return (
     <>
@@ -101,20 +92,17 @@ function App() {
             <ImageGallery
               page={page}
               pictures={pictures}
-              response={response}
               onClickModal={onClickModal}
               updateCount={updateCount}
               totalHits={totalHits}
             />
           </>
         )}
-        {showModal && (
-          <Modal imageSrc={imageSrc} imageAlt={imageAlt} onClose={onClose} />
-        )}
+        {showModal.show && <Modal showModal={showModal} onClose={onClose} />}
       </div>
     </>
   );
-}
+};
 // }
 
 export default App;

@@ -1,11 +1,15 @@
 import propTypes from 'prop-types';
 import css from '../Modal/modal.module.css';
 
-const Modal = props => {
+const Modal = ({ onClose, showModal }) => {
   return (
-    <div className={css.overlay} onClick={props.onClose}>
+    <div className={css.overlay} onClick={onClose}>
       <div className={css.modal}>
-        <img className={css.image} src={props.imageSrc} alt={props.imageAlt} />
+        <img
+          className={css.image}
+          src={showModal.imageSrc}
+          alt={showModal.imageAlt}
+        />
       </div>
     </div>
   );
@@ -13,8 +17,12 @@ const Modal = props => {
 
 Modal.propTypes = {
   onClose: propTypes.func,
-  imageSrc: propTypes.string,
-  imageAlt: propTypes.string,
+  showModal: propTypes.arrayOf(
+    propTypes.shape({
+      imageSrc: propTypes.string,
+      imageAlt: propTypes.string,
+    })
+  ),
 };
 
 export default Modal;

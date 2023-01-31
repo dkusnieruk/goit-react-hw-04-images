@@ -3,15 +3,14 @@ import css from '../ImageGallery/imageGallery.module.css';
 import ButtonLoadMorePics from 'components/Button/ButtonLoadMore';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 
-function ImageGallery(props) {
-  console.log(props);
+const ImageGallery = ({ pictures, totalHits, onClickModal, updateCount }) => {
   return (
     <>
       <ul className={css.gallery}>
-        {props.pictures.map((picture, index) => {
+        {pictures.map((picture, index) => {
           return (
             <ImageGalleryItem
-              onClickModal={props.onClickModal}
+              onClickModal={onClickModal}
               picture={picture}
               index={index}
               webformatURL={picture.webformatURL}
@@ -22,13 +21,13 @@ function ImageGallery(props) {
         })}
       </ul>
       <div className={css.buttonPlace}>
-        {props.totalHits - props.pictures.length > 0 && (
-          <ButtonLoadMorePics updateCount={props.updateCount} />
+        {totalHits - pictures.length > 0 && (
+          <ButtonLoadMorePics updateCount={updateCount} />
         )}
       </div>
     </>
   );
-}
+};
 // }
 
 ImageGallery.propTypes = {

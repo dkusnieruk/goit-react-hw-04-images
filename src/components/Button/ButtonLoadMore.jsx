@@ -2,9 +2,9 @@ import propTypes from 'prop-types';
 
 import css from '../Button/button.module.css';
 
-function ButtonLoadMorePics(props) {
+function ButtonLoadMorePics({ updateCount }) {
   return (
-    <button onClick={props.updateCount} id="LoadMore" className={css.button}>
+    <button onClick={updateCount} id="LoadMore" className={css.button}>
       Load More Pics
     </button>
   );
